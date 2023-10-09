@@ -97,6 +97,9 @@ void LinkedList::insertNode(node* prevNode, int n) {
 	//temp 삽입
 	//temp앞의 node의 nextNode를 temp로 저장
 	prevNode->nextNode = temp;
+
+	// ******
+	// tail 이후에 insert될 경우에 대한 코드 필요
 }
 
 //node 삭제
@@ -134,8 +137,10 @@ int Baekjoon1021_RollingQueue() {
 	LinkedList SSL;
 
 	for (int i = 0; i < N; i++) {
-		SSL.addFrontNode(i);
+		SSL.addNode(i + 1);
 	}
+
+	SSL.display(SSL.getHead());
 
 
 

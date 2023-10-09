@@ -5,6 +5,6 @@ using namespace std;
 
 int main()
 {
-	Sejong01_ReviewC_Pointer();
+	Baekjoon1021_RollingQueue();
 
 }
