@@ -5,6 +5,6 @@ using namespace std;
 
 int main()
 {
-	Baekjoon1021_RollingQueue();
+	S01_Baekjoon1021_RoolingQueue();
 
 }

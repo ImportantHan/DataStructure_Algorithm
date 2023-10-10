@@ -4,5 +4,6 @@
 int Sejong01_ReviewC_Pointer();
 
 // 백준 문제 풀이
-int Baekjoon1021_RollingQueue();
+int S01_Baekjoon1021_RoolingQueue();
+int S02_Baekjoon2346_BalloonPop();
 

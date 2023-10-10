@@ -128,8 +128,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DataStructure&amp;Algorithm.cpp" />
+    <ClCompile Include="S02_Baekjoon2346_BalloonPop.cpp" />
     <ClCompile Include="Sejong01_ReviewC_Pointer.cpp" />
-    <ClCompile Include="Baekjoon1021_RoolingQueue.cpp" />
+    <ClCompile Include="S01_Baekjoon1021_RoolingQueue.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h" />
