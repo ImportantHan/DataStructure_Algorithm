@@ -5,6 +5,6 @@ using namespace std;
 
 int main()
 {
-	S01_Baekjoon1021_RoolingQueue();
+	S02_Baekjoon2346_BalloonPop();
 
 }

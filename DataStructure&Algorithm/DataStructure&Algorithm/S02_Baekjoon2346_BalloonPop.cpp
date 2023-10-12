@@ -64,22 +64,49 @@ public:
 		delete DeleteNode;
 	}
 
-	// 앞쪽에 더하기 (헤드를 가장 뒤에로 지정해야함, O(1)을 최대한 많이 만들기 위해)
-	void AddFrontNode(Node* NewNode) {
+	// 추가
+	void AppendNode(Node* NewNode) {
 		if (NewNode == nullptr) return;
 
 		// Head가 nullptr 일 경우 Head는 NewNode가 됨
 		if (Head == nullptr) {
 			Head = NewNode;
+			Head->SetNextNode(Head);
+			Head->SetPrevNode(Head);
 		}
 		// Head가 있을 경우
 		else {
-			// NewNode의 NextNode는 Head의
-			NewNode->SetNextNode(Head->GetNextNode());
-			NewNode->SetPrevNode(Head);
-			
+			// NewNode의 다음 노드는 헤드로 변경
+			NewNode->SetNextNode(Head);
+			// 가장 뒤 노드의 다음 노드*는 NewNode로 변경
+			Head->GetPrevNode()->SetNextNode(NewNode);
+			// NewNode의 이전 노드는 헤드의 이전노드로 변경 
+			NewNode->SetPrevNode(Head->GetPrevNode());
+			// 헤드의 이전 노드는 NewNode
+			Head->SetPrevNode(NewNode);
 		}
+		Count++;
 	}
+
+	// 탐색
+	Node* GetNodeAt(int Location) {
+		if (Location < 0 || Location > Count) return nullptr;
+
+		Node* CurrentNode = Head;
+
+		if (Location <= Count / 2) {
+			while (CurrentNode != nullptr && --Location >= 0) {
+				CurrentNode = CurrentNode->GetNextNode();
+			}
+		} else {
+			Location = Count - Location + 1;
+			while (CurrentNode != nullptr && --Location >= 0) {
+				CurrentNode = CurrentNode->GetPrevNode();
+			}
+		}
+		return CurrentNode;
+	}
+
 
 	int GetCount() {
 		return Count;
@@ -93,9 +120,13 @@ int S02_Baekjoon2346_BalloonPop() {
 	CDLL* List = new CDLL();
 
 	for (int i = 0; i < N; i++) {
-		int M;
-		cin >> M;
+		int num;
+		cin >> num;
+		List->AppendNode(List->CreateNode(num));
 	}
+
+	cout << List->GetNodeAt(4)->GetData() << "\n";
+
 
 	return 0;
 }
