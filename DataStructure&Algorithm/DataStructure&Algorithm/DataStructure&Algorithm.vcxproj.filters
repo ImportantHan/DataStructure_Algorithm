@@ -27,6 +27,9 @@
     <ClCompile Include="S02_Baekjoon2346_BalloonPop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Sejong05_CircularLinkedList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h">

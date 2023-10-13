@@ -6,5 +6,4 @@ using namespace std;
 int main()
 {
 	S02_Baekjoon2346_BalloonPop();
-
 }

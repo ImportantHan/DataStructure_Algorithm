@@ -2,131 +2,245 @@
 
 using namespace std;
 
-class Node {
+class CDLL_Node {
 private:
-	int Data;
-	Node* NextNode;
-	Node* PrevNode;
+    int Data;
+    int Num;
+    CDLL_Node* NextNode;
+    CDLL_Node* PrevNode;
 
 public:
-	Node(int NewData) {
-		Data = NewData;
-		NextNode = nullptr;
-		PrevNode = nullptr;
-	}
+    CDLL_Node(int NewData, int NewNum) {
+        Data = NewData;
+        Num = NewNum;
+        NextNode = nullptr;
+        PrevNode = nullptr;
+    }
 
-	int GetData() {
-		return Data;
-	}
+    ~CDLL_Node() {
 
-	Node* GetNextNode() {
-		return NextNode;
-	}
+    }
 
-	Node* GetPrevNode() {
-		return PrevNode;
-	}
+    int GetData() {
+        return Data;
+    }
 
-	void SetData(int NewData) {
-		Data = NewData;
-	}
+    int GetNum() {
+        return Num;
+    }
 
-	void SetNextNode(Node* NewNextNode) {
-		NextNode = NewNextNode;
-	}
+    CDLL_Node* GetNextNode() {
+        return NextNode;
+    }
 
-	void SetPrevNode(Node* NewPrevNode) {
-		PrevNode = NewPrevNode;
-	}
+    CDLL_Node* GetPrevNode() {
+        return PrevNode;
+    }
+
+    void SetData(int NewData) {
+        Data = NewData;
+    }
+
+    void SetNextNode(CDLL_Node* NewNextNode) {
+        NextNode = NewNextNode;
+    }
+
+    void SetPrevNode(CDLL_Node* NewPrevNode) {
+        PrevNode = NewPrevNode;
+    }
 };
 
-class CDLL {
+class CircularDoubleLinkedList {
 private:
-	Node* Head;
-	int Count;
+    CDLL_Node* Head;
+    int Count;
 
 public:
-	CDLL() {
-		Head = nullptr;
-		Count = 0;
-	}
+    CircularDoubleLinkedList() {
+        Head = nullptr;
+        Count = 0;
+    }
 
-	~CDLL() {
-	}
+    ~CircularDoubleLinkedList() {
+    }
 
-	// 노드 생성
-	Node* CreateNode(int NewData) {
-		return new Node(NewData);
-	}
+    // 노드 생성
+    CDLL_Node* CreateNode(int NewData, int NewNum) {
+        return new CDLL_Node(NewData, NewNum);
+    }
 
-	// 노드 삭제
-	void DeleteNode(Node* DeleteNode) {
-		delete DeleteNode;
-	}
+    // 노드 삭제
+    void DeleteNode(CDLL_Node* DeleteNode) {
+        delete DeleteNode;
+    }
 
-	// 추가
-	void AppendNode(Node* NewNode) {
-		if (NewNode == nullptr) return;
+    // 추가
+    void AppendNode(CDLL_Node* NewNode) {
+        if (NewNode == nullptr) return;
 
-		// Head가 nullptr 일 경우 Head는 NewNode가 됨
-		if (Head == nullptr) {
-			Head = NewNode;
-			Head->SetNextNode(Head);
-			Head->SetPrevNode(Head);
-		}
-		// Head가 있을 경우
-		else {
-			// NewNode의 다음 노드는 헤드로 변경
-			NewNode->SetNextNode(Head);
-			// 가장 뒤 노드의 다음 노드*는 NewNode로 변경
-			Head->GetPrevNode()->SetNextNode(NewNode);
-			// NewNode의 이전 노드는 헤드의 이전노드로 변경 
-			NewNode->SetPrevNode(Head->GetPrevNode());
-			// 헤드의 이전 노드는 NewNode
-			Head->SetPrevNode(NewNode);
-		}
-		Count++;
-	}
+        if (Head == nullptr) {
+            Head = NewNode;
+            Head->SetNextNode(Head);
+            Head->SetPrevNode(Head);
+        }
+        else {
+            NewNode->SetNextNode(Head);
+            Head->GetPrevNode()->SetNextNode(NewNode);
+            NewNode->SetPrevNode(Head->GetPrevNode());
+            Head->SetPrevNode(NewNode);
+        }
+        Count++;
+    }
 
-	// 탐색
-	Node* GetNodeAt(int Location) {
-		if (Location < 0 || Location > Count) return nullptr;
+    // 추가 특정노드 뒤
+    void InsertNode(CDLL_Node* TargetNode, CDLL_Node* NewNode) {
+        if (TargetNode == nullptr || NewNode == nullptr) return;
 
-		Node* CurrentNode = Head;
+        if (TargetNode == Head) {
+            NewNode->SetNextNode(Head);
+            NewNode->SetPrevNode(Head->GetPrevNode());
+            Head->GetPrevNode()->SetNextNode(NewNode);
+            Head->SetPrevNode(NewNode);
+            Head = NewNode;
+        }
+        else {
+            NewNode->SetNextNode(TargetNode->GetNextNode());
+            NewNode->SetPrevNode(TargetNode);
+            TargetNode->GetNextNode()->SetPrevNode(NewNode);
+            TargetNode->SetNextNode(NewNode);
+        }
+        Count++;
+    }
 
-		if (Location <= Count / 2) {
-			while (CurrentNode != nullptr && --Location >= 0) {
-				CurrentNode = CurrentNode->GetNextNode();
-			}
-		} else {
-			Location = Count - Location + 1;
-			while (CurrentNode != nullptr && --Location >= 0) {
-				CurrentNode = CurrentNode->GetPrevNode();
-			}
-		}
-		return CurrentNode;
-	}
+    CDLL_Node* FindRight(int Location) {
+        CDLL_Node* CurrentNode = Head;
+        while (CurrentNode != nullptr && --Location >= 0) {
+            CurrentNode = CurrentNode->GetNextNode();
+        }
 
+        return CurrentNode;
+    }
 
-	int GetCount() {
-		return Count;
-	}
+    CDLL_Node* FindLeft(int Location) {
+        CDLL_Node* CurrentNode = Head;
+        while (CurrentNode != nullptr && ++Location <= 0) {
+            CurrentNode = CurrentNode->GetPrevNode();
+        }
+
+        return CurrentNode;
+    }
+
+    //// 삭제
+    //void RemoveNode(CDLL_Node* TargetNode) {
+    //    if (Head == nullptr || TargetNode == nullptr) return;
+
+    //    if (TargetNode == Head) {
+    //        TargetNode->GetPrevNode()->SetNextNode(Head->GetNextNode());
+    //        TargetNode->GetNextNode()->SetPrevNode(Head->GetPrevNode());
+    //        Head = TargetNode->GetNextNode();
+    //    }
+    //    else {
+    //        CDLL_Node* Temp = TargetNode;
+    //        TargetNode->GetPrevNode()->SetNextNode(Temp->GetNextNode());
+    //        TargetNode->GetNextNode()->SetPrevNode(Temp->GetPrevNode());
+    //    }
+
+    //    delete TargetNode;
+    //    Count--;
+    //}
+ 
+
+    // 삭제
+    //void RemoveRight(CDLL_Node* TargetNode) {
+    //    if (Head == nullptr || TargetNode == nullptr) return;
+
+    //    TargetNode->GetPrevNode()->SetNextNode(Head->GetNextNode());
+    //    TargetNode->GetNextNode()->SetPrevNode(Head->GetPrevNode());
+    //    Head = TargetNode->GetNextNode();
+
+    //    delete TargetNode;
+    //    Count--;
+    //}
+
+    //void RemoveLeft(CDLL_Node* TargetNode) {
+    //    if (Head == nullptr || TargetNode == nullptr) return;
+
+    //    TargetNode->GetPrevNode()->SetNextNode(Head->GetNextNode());
+    //    TargetNode->GetNextNode()->SetPrevNode(Head->GetPrevNode());
+    //    Head = TargetNode->GetPrevNode();
+
+    //    delete TargetNode;
+    //    Count--;
+    //}
+
+    void RemoveNode(CDLL_Node* TargetNode) {
+        if (Head == nullptr || TargetNode == nullptr) return;
+
+        TargetNode->GetPrevNode()->SetNextNode(Head->GetNextNode());
+        TargetNode->GetNextNode()->SetPrevNode(Head->GetPrevNode());
+        Head = TargetNode->GetNextNode();
+
+        delete TargetNode;
+        Count--;
+    }
+
+    // 출력
+    void Print() {
+        cout << Count << " : ";
+        CDLL_Node* Current = Head;
+        for (int i = 0; i < Count; i++) {
+            cout << Current->GetData() << "(" << Current->GetNum() << ") ";
+            Current = Current->GetNextNode();
+        }
+        cout << "\n";
+    }
+
+    // 전체 노드 갯수
+    int GetCount() {
+        return Count;
+    }
 };
 
-int S02_Baekjoon2346_BalloonPop() {
-	int N;
-	cin >> N;
 
-	CDLL* List = new CDLL();
+int S02_Baekjoon2346_BalloonPop()
+{
+    int N;
+    cin >> N;
 
-	for (int i = 0; i < N; i++) {
-		int num;
-		cin >> num;
-		List->AppendNode(List->CreateNode(num));
-	}
+    CircularDoubleLinkedList* List = new CircularDoubleLinkedList();
 
-	cout << List->GetNodeAt(4)->GetData() << "\n";
+    for (int i = 0; i < N; i++) {
+        int data;
+        cin >> data;
+        List->AppendNode(List->CreateNode(data, i + 1));
+    }
 
+    int RemoveBalloon = 0;
+    for (int i = 0; i < N; i++) {
+        if (RemoveBalloon >= 0) {
+            int Move = List->FindRight(RemoveBalloon)->GetData();
+            List->RemoveNode(List->FindRight(RemoveBalloon));
+            if (Move >= 0) {
+                RemoveBalloon = Move - 1;
+            }
+            else {
+                RemoveBalloon = Move;
+            }
+        }
+        else {
+            int Move = List->FindLeft(RemoveBalloon)->GetData();
+            List->RemoveNode(List->FindLeft(RemoveBalloon));
+            if (Move >= 0) {
+                RemoveBalloon = Move - 1;
+            }
+            else {
+                RemoveBalloon = Move;
+            }
+        }
 
-	return 0;
+        cout << i + 1 << "회 실행 후 리스트 >> ";
+        List->Print();
+    }
+
+    return 0;
 }

@@ -131,6 +131,7 @@
     <ClCompile Include="S02_Baekjoon2346_BalloonPop.cpp" />
     <ClCompile Include="Sejong01_ReviewC_Pointer.cpp" />
     <ClCompile Include="S01_Baekjoon1021_RoolingQueue.cpp" />
+    <ClCompile Include="Sejong05_CircularLinkedList.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h" />
