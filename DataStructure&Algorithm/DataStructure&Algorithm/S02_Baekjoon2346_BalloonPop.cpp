@@ -1,4 +1,33 @@
+/*
+1번부터 N번까지 N개의 풍선이 원형으로 놓여 있고. i번 풍선의 오른쪽에는 i+1번 풍선이 있고, 왼쪽에는 i-1번 풍선이 있다.
+단, 1번 풍선의 왼쪽에 N번 풍선이 있고, N번 풍선의 오른쪽에 1번 풍선이 있다.
+각 풍선 안에는 종이가 하나 들어있고, 종이에는 -N보다 크거나 같고, N보다 작거나 같은 정수가 하나 적혀있다.
+이 풍선들을 다음과 같은 규칙으로 터뜨린다.
+
+우선, 제일 처음에는 1번 풍선을 터뜨린다.
+다음에는 풍선 안에 있는 종이를 꺼내어 그 종이에 적혀있는 값만큼 이동하여 다음 풍선을 터뜨린다.
+양수가 적혀 있을 경우에는 오른쪽으로, 음수가 적혀 있을 때는 왼쪽으로 이동한다.
+이동할 때에는 이미 터진 풍선은 빼고 이동한다.
+
+예를 들어 다섯 개의 풍선 안에 차례로 3, 2, 1, -3, -1이 적혀 있었다고 하자.
+이 경우 3이 적혀 있는 1번 풍선, -3이 적혀 있는 4번 풍선, -1이 적혀 있는 5번 풍선, 1이 적혀 있는 3번 풍선, 2가 적혀 있는 2번 풍선의 순서대로 터지게 된다.
+
+첫째 줄에 자연수 N(1 ≤ N ≤ 1,000)이 주어진다.
+다음 줄에는 차례로 각 풍선 안의 종이에 적혀 있는 수가 주어진다.
+종이에 0은 적혀있지 않다.
+
+입력 :
+5
+3 2 1 -3 -1
+
+출력:
+1 4 5 3 2
+*/
+
+// Circular Doubly Linked List를 이용한 풀이
+
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -92,112 +121,32 @@ public:
         Count++;
     }
 
-    // 추가 특정노드 뒤
-    void InsertNode(CDLL_Node* TargetNode, CDLL_Node* NewNode) {
-        if (TargetNode == nullptr || NewNode == nullptr) return;
+    CDLL_Node* T_FindNode(int Location) {
 
-        if (TargetNode == Head) {
-            NewNode->SetNextNode(Head);
-            NewNode->SetPrevNode(Head->GetPrevNode());
-            Head->GetPrevNode()->SetNextNode(NewNode);
-            Head->SetPrevNode(NewNode);
-            Head = NewNode;
-        }
-        else {
-            NewNode->SetNextNode(TargetNode->GetNextNode());
-            NewNode->SetPrevNode(TargetNode);
-            TargetNode->GetNextNode()->SetPrevNode(NewNode);
-            TargetNode->SetNextNode(NewNode);
-        }
-        Count++;
-    }
-
-    CDLL_Node* FindRight(int Location) {
         CDLL_Node* CurrentNode = Head;
-        while (CurrentNode != nullptr && --Location >= 0) {
-            CurrentNode = CurrentNode->GetNextNode();
-        }
 
+        if (Location > 0) {
+            while (--Location > 0) {
+                CurrentNode = CurrentNode->GetNextNode();
+            }
+        }
+        else if (Location < 0) {
+            while (++Location < 0)
+            {
+                CurrentNode = CurrentNode->GetPrevNode();
+            }
+        }
         return CurrentNode;
     }
 
-    CDLL_Node* FindLeft(int Location) {
-        CDLL_Node* CurrentNode = Head;
-        while (CurrentNode != nullptr && ++Location <= 0) {
-            CurrentNode = CurrentNode->GetPrevNode();
-        }
-
-        return CurrentNode;
-    }
-
-    //// 삭제
-    //void RemoveNode(CDLL_Node* TargetNode) {
-    //    if (Head == nullptr || TargetNode == nullptr) return;
-
-    //    if (TargetNode == Head) {
-    //        TargetNode->GetPrevNode()->SetNextNode(Head->GetNextNode());
-    //        TargetNode->GetNextNode()->SetPrevNode(Head->GetPrevNode());
-    //        Head = TargetNode->GetNextNode();
-    //    }
-    //    else {
-    //        CDLL_Node* Temp = TargetNode;
-    //        TargetNode->GetPrevNode()->SetNextNode(Temp->GetNextNode());
-    //        TargetNode->GetNextNode()->SetPrevNode(Temp->GetPrevNode());
-    //    }
-
-    //    delete TargetNode;
-    //    Count--;
-    //}
- 
-
-    // 삭제
-    //void RemoveRight(CDLL_Node* TargetNode) {
-    //    if (Head == nullptr || TargetNode == nullptr) return;
-
-    //    TargetNode->GetPrevNode()->SetNextNode(Head->GetNextNode());
-    //    TargetNode->GetNextNode()->SetPrevNode(Head->GetPrevNode());
-    //    Head = TargetNode->GetNextNode();
-
-    //    delete TargetNode;
-    //    Count--;
-    //}
-
-    //void RemoveLeft(CDLL_Node* TargetNode) {
-    //    if (Head == nullptr || TargetNode == nullptr) return;
-
-    //    TargetNode->GetPrevNode()->SetNextNode(Head->GetNextNode());
-    //    TargetNode->GetNextNode()->SetPrevNode(Head->GetPrevNode());
-    //    Head = TargetNode->GetPrevNode();
-
-    //    delete TargetNode;
-    //    Count--;
-    //}
-
-    void RemoveNode(CDLL_Node* TargetNode) {
-        if (Head == nullptr || TargetNode == nullptr) return;
-
-        TargetNode->GetPrevNode()->SetNextNode(Head->GetNextNode());
-        TargetNode->GetNextNode()->SetPrevNode(Head->GetPrevNode());
+    void T_RemoveNode(CDLL_Node* TargetNode) {
+        CDLL_Node* temp = TargetNode;
+        TargetNode->GetPrevNode()->SetNextNode(temp->GetNextNode());
+        TargetNode->GetNextNode()->SetPrevNode(temp->GetPrevNode());
         Head = TargetNode->GetNextNode();
 
         delete TargetNode;
         Count--;
-    }
-
-    // 출력
-    void Print() {
-        cout << Count << " : ";
-        CDLL_Node* Current = Head;
-        for (int i = 0; i < Count; i++) {
-            cout << Current->GetData() << "(" << Current->GetNum() << ") ";
-            Current = Current->GetNextNode();
-        }
-        cout << "\n";
-    }
-
-    // 전체 노드 갯수
-    int GetCount() {
-        return Count;
     }
 };
 
@@ -209,37 +158,26 @@ int S02_Baekjoon2346_BalloonPop()
 
     CircularDoubleLinkedList* List = new CircularDoubleLinkedList();
 
+    int data;
+    vector<int> arr;
     for (int i = 0; i < N; i++) {
-        int data;
         cin >> data;
-        List->AppendNode(List->CreateNode(data, i + 1));
+        arr.push_back(data);
+        List->AppendNode(List->CreateNode(arr[i], i + 1));
     }
 
-    int RemoveBalloon = 0;
+    int RemoveBallon = 0;
     for (int i = 0; i < N; i++) {
-        if (RemoveBalloon >= 0) {
-            int Move = List->FindRight(RemoveBalloon)->GetData();
-            List->RemoveNode(List->FindRight(RemoveBalloon));
-            if (Move >= 0) {
-                RemoveBalloon = Move - 1;
-            }
-            else {
-                RemoveBalloon = Move;
-            }
+        int temp = List->T_FindNode(RemoveBallon)->GetData();
+        int ResultCount = List->T_FindNode(RemoveBallon)->GetNum();
+        cout << ResultCount << " ";
+        List->T_RemoveNode(List->T_FindNode(RemoveBallon));
+        if (temp >= 0) {
+            RemoveBallon = temp;
         }
         else {
-            int Move = List->FindLeft(RemoveBalloon)->GetData();
-            List->RemoveNode(List->FindLeft(RemoveBalloon));
-            if (Move >= 0) {
-                RemoveBalloon = Move - 1;
-            }
-            else {
-                RemoveBalloon = Move;
-            }
+            RemoveBallon = temp - 1;
         }
-
-        cout << i + 1 << "회 실행 후 리스트 >> ";
-        List->Print();
     }
 
     return 0;
