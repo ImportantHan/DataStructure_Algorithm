@@ -1,0 +1,3 @@
+﻿  SeSAC11_Baekjoon11399_ATM.cpp
+C:\Users\Moo\Desktop\workspace\DataStructure_Algorithm\SeSAC11_Baekjoon11399_ATM\SeSAC11_Baekjoon11399_ATM.cpp(19,16): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  SeSAC11_Baekjoon11399_ATM.vcxproj -> C:\Users\Moo\Desktop\workspace\DataStructure_Algorithm\SeSAC11_Baekjoon11399_ATM\x64\Debug\SeSAC11_Baekjoon11399_ATM.exe
